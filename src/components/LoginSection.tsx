@@ -19,6 +19,7 @@ const LoginSection = () => {
     signIn("credentials", {
       email: email,
       password: psswd,
+      name:"gabriel",
       redirect: false,
     }).then((res) => {
       if(res?.ok){
@@ -49,9 +50,9 @@ const LoginSection = () => {
               Faça seu login
             </h2>
             <p className="mt-2 text-center text-sm text-gray-600">
-              Or{" "}
+              Ou{" "}
               <a
-                href="#"
+                href="/createAccount"
                 className="font-medium text-indigo-600 hover:text-indigo-500"
               >
                 crie sua conta
@@ -98,14 +99,7 @@ const LoginSection = () => {
             </div>
 
             <div className="flex items-center justify-between">
-              <div className="text-sm">
-                <a
-                  href="#"
-                  className="font-medium text-indigo-600 hover:text-indigo-500"
-                >
-                  Forgot your password?
-                </a>
-              </div>
+              
             </div>
 
             <div>
@@ -118,12 +112,6 @@ const LoginSection = () => {
               >
                 Sign in
               </button>
-            </div>
-            <div
-              className="flex cursor-pointer justify-center items-center bg-indigo-600 rounded-md py-2 px-4 text-sm font-medium text-white hover:bg-indigo-700"
-              onClick={() => signIn("google")}
-            >
-              Entre com o google <AiFillGoogleCircle className="ml-2" />
             </div>
           </form>
         </div>

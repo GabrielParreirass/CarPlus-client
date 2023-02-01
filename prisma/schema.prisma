@@ -14,15 +14,15 @@ model users {
   id       String @id @default(auto()) @map("_id") @db.ObjectId
   email    String @unique
   password String
-  name     String
-  image    String
+  username String
 }
 
 model vehicles {
-  id String @id @default(auto()) @map("_id") @db.ObjectId
-  brand String
-  model String
-  year String
-  price Int
+  id          String @id @default(auto()) @map("_id") @db.ObjectId
+  brand       String
+  model       String
+  year        String
+  price       Int
   description String
+  class       String
 }

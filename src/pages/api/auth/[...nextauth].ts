@@ -1,50 +1,46 @@
 import NextAuth from "next-auth/next";
-import GoogleProvider from "next-auth/providers/google";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { prisma } from "@/lib/prisma";
-import { PrismaAdapter } from "@next-auth/prisma-adapter"
+import bcrypt from "bcrypt";
 
 export const authOptions = {
-  // adapter: PrismaAdapter(prisma),
   providers: [
-    GoogleProvider({
-      clientId: process.env.GOOGLE_CLIENT_ID!,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
-    },
-    
-    
-    ),
     CredentialsProvider({
       name: "NextAuthCredentials",
       credentials: {
-        email: { label: "Email", type: "email", placeholder: "example@gmail.com" },
-        password: { label: "Password", type: "password" }
+        email: {
+          label: "Email",
+          type: "email",
+          placeholder: "example@gmail.com",
+        },
+        password: { label: "Password", type: "password" },
       },
       async authorize(credentials, req) {
-
         const user = await prisma.users.findFirst({
-          where:{
+          where: {
             email: credentials?.email,
-            password: credentials?.password
+          },
+        });
+
+        if (user) {
+          const passwordMatch = await bcrypt.compare(
+            credentials!.password,
+            user.password
+          );
+          if (passwordMatch) {
+            return {email:user.email ,name:user.username, image:"xxxx", id:user.id};
+          }else{
+            throw new Error("Authentication failed");
           }
-        })
-
-
-        if(user){
-          console.log(user)
-          return user
-        }else{
-          throw new Error("Authentication failed")
+        } else {
+          throw new Error("Authentication failed");
         }
-
       },
     }),
   ],
-  pages:{
-    error:"/auth/error"
-  }
-
-
+  pages: {
+    error: "/auth/error",
+  },
 };
 
 export default NextAuth(authOptions);
