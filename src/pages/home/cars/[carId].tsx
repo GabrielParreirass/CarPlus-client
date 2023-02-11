@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import Image from "next/dist/client/image";
 import "rsuite/dist/rsuite.min.css";
 import { DateRangePicker } from "rsuite";
+import axios from "axios";
+import { useSession } from "next-auth/react";
 
 export async function getStaticPaths() {
   const res = await fetch(`http://localhost:3001/getCars`);
@@ -43,6 +45,8 @@ const carPage = (vehicle: any) => {
     return <div>Carregando Infos</div>;
   }
 
+  const data = useSession();
+
   const { combine, allowedMaxDays, beforeToday, after, before } =
     DateRangePicker;
 
@@ -50,7 +54,9 @@ const carPage = (vehicle: any) => {
   const [finalDate, setFinalDate] = useState(new Date());
   const [modal, setModal] = useState("hidden");
   const [diarias, setDiarias] = useState(Number);
-  const [VehicleClass, SetVehicleClass] = useState("");
+  const [date1Formated, setDate1Formated] = useState("")
+  const [date2Formated, setDate2Formated] = useState("")
+  const [currentUserEmail, setCurrentUserEmail] = useState(data.data?.user?.email)
 
   const handleSubmit = () => {
     // console.log(`Início:${inicialDate.getDate()}/${inicialDate.getMonth()+1}`)
@@ -67,10 +73,12 @@ const carPage = (vehicle: any) => {
     let date2: any = new Date(d2);
 
     if (date2 > date1) {
-      const date1Formated = new Date(d1).toLocaleDateString("en-GB");
-      const date2Formated = new Date(d2).toLocaleDateString("en-GB");
+      const date1Fm = new Date(d1).toLocaleDateString("en-GB");
+      const date2Fm= new Date(d2).toLocaleDateString("en-GB");
 
-      console.log({ date1Formated, date2Formated });
+      setDate1Formated(date1Fm)
+      setDate2Formated(date2Fm)
+
 
       const diffInMs = date2 - date1;
       const diffInDays = diffInMs / (1000 * 60 * 60 * 24);
@@ -88,6 +96,24 @@ const carPage = (vehicle: any) => {
   const handleCloseModal = () => {
     setModal("hidden");
   };
+
+  const handleConfirm = () =>{
+      axios.post("http://localhost:3001/createBooking", {
+        date1: date1Formated,
+        date2: date2Formated,
+        dayQtd: diarias,
+        value: diarias * parseInt(modalVehicle.price),
+        currentUserEmail: currentUserEmail,
+        carClass: modalVehicle.class
+      }).then(res=>{
+        console.log(res)
+        if(res.status == 200){
+          setModal("hidden");
+          window.alert("Reserva feita com sucesso!")
+        }
+      })
+      
+  }
 
   const modalVehicle = vehicle.vehicle[0];
 
@@ -161,13 +187,16 @@ const carPage = (vehicle: any) => {
           </div>
           <div className="mt-5">
             <div className="text-center text-lg">
-              {diarias} dias x R${modalVehicle.price},00
+              {diarias} dias x R${modalVehicle.price},00 
+            </div>
+            <div className="text-center text-lg">
+              ( {date1Formated} até {date2Formated} )
             </div>
             <div className="text-center text-lg">
               Valor total = R${diarias * parseInt(modalVehicle.price)},00
             </div>
             <div className="text-center p-5">
-              <button className="py-2 px-4 bg-cyan-300 mt-4 rounded font-bold text-black">
+              <button className="py-2 px-4 bg-cyan-300 mt-4 rounded font-bold text-black" onClick={()=> handleConfirm()}>
                 Confirmar Reserva
               </button>
             </div>

@@ -31,7 +31,7 @@ const index = (props: any) => {
     <div>
       <div className="flex w-full justify-around items-center bg-indigo-600 rounded-b-xl p-5">
         <div className="text-white text-xl w-1/3">
-          Bem vindo, {props.user.name}
+          Bem vindo, <Link href={"/home/user"} className="underline">{props.user.name}</Link>
         </div>
         <h2 className=" text-2xl text-white w-1/3">CarPlus+</h2>
         <div
@@ -50,9 +50,9 @@ const index = (props: any) => {
         <div>
           <div className="flex">
             <h2 className="ml-5 text-2xl">Classe C</h2>
-            <Link href={`/home/cars/C`}>
+            <a href={`/home/cars/C`}>
                     <div className="text-white bg-indigo-400 py-2 px-4 cursor-pointer ml-5 rounded-xl">Ver detalhes</div>
-            </Link>
+            </a>
           </div>
           <div className="grid grid-cols-3">
             {vehiclesC.map(
@@ -81,6 +81,7 @@ const index = (props: any) => {
                       width="240"
                       height="240"
                       alt="hb20"
+                      priority
                     ></Image>{" "}
                   </div>
                 </div>
@@ -91,9 +92,9 @@ const index = (props: any) => {
         <div>
           <div className="flex">
             <h2 className="ml-5 text-2xl">Classe B</h2>
-            <Link href={`/home/cars/C`}>
+            <a href={`/home/cars/C`}>
                     <div className="text-white bg-indigo-400 py-2 px-4 cursor-pointer ml-5 rounded-xl">Ver detalhes</div>
-            </Link>
+            </a>
           </div>
           <div className="grid grid-cols-3">
             {vehiclesB.map(
