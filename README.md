@@ -1,4 +1,4 @@
-O CarPlus é um app de aluguel de carros, onde o front-end foi feito com NextJs utilizando o Prisma como orm no back-end.
+O CarPlus é um app de aluguel de carros, onde o front-end foi feito com NextJs utilizando o Prisma como orm no back-end e Tailwind CSS para o estilo.
 
 O app possui autenticação utilizano o NextAuth, para poder acessar o aplicativo é necessário fazer login, usando email e senha, que podem ser cadastrados na página de criação de contas.
 
